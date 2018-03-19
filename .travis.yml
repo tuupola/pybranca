@@ -8,6 +8,11 @@ python:
   - "3.6"
   - "3.6-dev"
   - "3.7-dev"
+cache:
+  directories:
+    - $HOME/libsodium
+before_install:
+  - sudo ./.travis-libsodium.sh
 install:
   - pip install -r requirements.txt
 script:
