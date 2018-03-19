@@ -27,6 +27,7 @@ Authenticated and encrypted API tokens using modern crypto.
 import base62
 import calendar
 import ctypes
+import binascii
 import struct
 from datetime import datetime
 from xchacha20poly1305 import generate_nonce
@@ -74,11 +75,20 @@ class Branca:
 
         return base62.encodebytes(header + ciphertext)
 
-    def decode(self, token):
+    def decode(self, token, ttl=None):
         token = base62.decodebytes(token)
         header = token[0:CRYPTO_AEAD_XHCACHA20POLY1305_IETF_NPUBBYTES + 5]
         nonce = header[5:CRYPTO_AEAD_XHCACHA20POLY1305_IETF_NPUBBYTES + 5]
         ciphertext = token[CRYPTO_AEAD_XHCACHA20POLY1305_IETF_NPUBBYTES + 5:]
+
+        version, time = struct.unpack(">BL", bytes(header[0:5]))
+
+        if ttl is not None:
+            future = time + ttl
+            timestamp = calendar.timegm(datetime.utcnow().timetuple())
+            if future < timestamp:
+                raise RuntimeError("Token is expired")
+
 
         payload = crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, header, nonce, self._key)
 
