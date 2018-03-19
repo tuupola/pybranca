@@ -20,6 +20,9 @@
 
 from branca import Branca
 from binascii import unhexlify, hexlify
+import base62
+import pytest
+import struct
 import xchacha20poly1305
 
 def test_vector1():
@@ -29,9 +32,42 @@ def test_vector1():
 
     assert token == "875GH233T7IYrxtgXxlQBYiFobZMQdHAT51vChKsAIYCFxZtL1evV54vYqLyZtQ0ekPHt8kJHQp0a"
 
+def test_vector2():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
+    token = branca.encode("Hello world!", timestamp=123206400)
+
+    with pytest.raises(RuntimeError):
+        branca.decode(token, 3600)
+
 def test_encode_and_decode():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = branca.encode("Hello world!")
     decoded = branca.decode(token)
 
     assert decoded == "Hello world!"
+
+def test_encode_with_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = branca.encode("Hello world!", timestamp=123206400)
+    binary = base62.decodebytes(token)
+    version, timestamp = struct.unpack(">BL", bytes(binary[0:5]))
+
+    assert version == 0xba
+    assert timestamp == 123206400
+
+def test_encode_with_zero_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = branca.encode("Hello world!", timestamp=0)
+    binary = base62.decodebytes(token)
+    version, timestamp = struct.unpack(">BL", bytes(binary[0:5]))
+
+    assert version == 0xba
+    assert timestamp == 0
+
+def test_should_throw_with_invalid_token():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = branca.encode("Hello world!")
+
+    with pytest.raises(RuntimeError):
+        decoded = branca.decode("XX" + token + "XX")
