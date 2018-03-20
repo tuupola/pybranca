@@ -83,6 +83,10 @@ class Branca:
 
         version, time = struct.unpack(">BL", bytes(header[0:5]))
 
+        # Implementation should accept only current version.
+        if version is not self.VERSION:
+            raise RuntimeError("Invalid token version")
+
         if ttl is not None:
             future = time + ttl
             timestamp = calendar.timegm(datetime.utcnow().timetuple())
