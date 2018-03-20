@@ -19,6 +19,25 @@ $ pip install pybranca
 
 ## Usage
 
+The payload of the token can be anything, like a simple string.
+
+```python
+from branca import Branca
+
+branca = Branca(key="supersecretkeyyoushouldnotcommit")
+
+token = branca.encode("Hello world!")
+payload = branca.decode(token)
+
+print(token)
+print(payload)
+
+# 87xqn4ACMhqDZvoNuO0pXykuDlCwRz4Vg7LS3klfHpTiOUw1ramOqfWoaA6bvsGwOQ49MDFOERU0T
+# b'Hello world!'
+```
+
+For more complicated data structures JSON is an usual choice.
+
 ```python
 import json
 from branca import Branca
@@ -32,8 +51,43 @@ string = json.dumps({
 
 token = branca.encode(string)
 payload = branca.decode(token)
+
+print(token)
+print(payload)
+print(json.loads(payload))
+
+# 1SlQocC4osLlwob7xQEAXNhyowLZSA3pFpXqYeQxZI6fTg7BEv2ulHBddRYq8JjoMsnObiPbucoK2 \
+# CEd4daAjTJE5HJOL2jEOY2rjiJQ9b1joKruxOVVR1zzSF65lRPLp4uExxHGKDaWceJtdrSmqBHFfk
+# b'{"user": "someone@example.com", "scope": ["read", "write", "delete"]}'
+# {'user': 'someone@example.com', 'scope': ['read', 'write', 'delete']}
+```
+
+By using [MessagePack](https://msgpack.org/) you can have more compact tokens.
+
+```python
+import msgpack
+from branca import Branca
+
+branca = Branca(key="supersecretkeyyoushouldnotcommit")
+
+packed = msgpack.dumps({
+    "user" : "someone@example.com",
+    "scope" : ["read", "write", "delete"]
+})
+
+token = branca.encode(packed)
+payload = branca.decode(token)
+
+print(token)
+print(payload)
+print(msgpack.loads(payload, raw=False))
+
+# gMaGwZR19MOIaWQKtSIe9Hy2V0XENkVPsTG2f3hdoUOmdcPizoEJoga6p8Fi0z18SocXTLC7dOl5P \
+# fDaRa3udIfeyd6KqLCOZ89ZpEZ15xiLGk5FFywrMhlPOCLdIpoW7
+# b'\x82\xa4user\xb3someone@example.com\xa5scope\x93\xa4read\xa5write\xa6delete'
+# {'user': 'someone@example.com', 'scope': ['read', 'write', 'delete']}
 ```
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE.txt) for more information.
