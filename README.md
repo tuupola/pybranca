@@ -50,10 +50,7 @@ from branca import Branca
 
 branca = Branca(key="supersecretkeyyoushouldnotcommit")
 
-string = json.dumps({
-    "user" : "someone@example.com",
-    "scope" : ["read", "write", "delete"]
-})
+string = json.dumps({"scope" : ["read", "write", "delete"]})
 
 token = branca.encode(string)
 payload = branca.decode(token)
@@ -62,10 +59,9 @@ print(token)
 print(payload)
 print(json.loads(payload))
 
-# 1SlQocC4osLlwob7xQEAXNhyowLZSA3pFpXqYeQxZI6fTg7BEv2ulHBddRYq8JjoMsnObiPbucoK2 \
-# CEd4daAjTJE5HJOL2jEOY2rjiJQ9b1joKruxOVVR1zzSF65lRPLp4uExxHGKDaWceJtdrSmqBHFfk
-# b'{"user": "someone@example.com", "scope": ["read", "write", "delete"]}'
-# {'user': 'someone@example.com', 'scope': ['read', 'write', 'delete']}
+# 6AlLJaBIFpXbwKTFsI3xXsk4se8YsdEKOtxYwtYDQHpoqabwZzmxAUS99BLxBJpmfJqnJ9VvzJYO1FXfsX78d0YsvTe43opYbUPgUao0EGV5qBli
+# b'{"scope": ["read", "write", "delete"]}'
+# {'scope': ['read', 'write', 'delete']}
 ```
 
 By using [MessagePack](https://msgpack.org/) you can have more compact tokens.
@@ -76,10 +72,7 @@ from branca import Branca
 
 branca = Branca(key="supersecretkeyyoushouldnotcommit")
 
-packed = msgpack.dumps({
-    "user" : "someone@example.com",
-    "scope" : ["read", "write", "delete"]
-})
+packed = msgpack.dumps({"scope" : ["read", "write", "delete"]})
 
 token = branca.encode(packed)
 payload = branca.decode(token)
@@ -88,10 +81,9 @@ print(token)
 print(payload)
 print(msgpack.loads(payload, raw=False))
 
-# gMaGwZR19MOIaWQKtSIe9Hy2V0XENkVPsTG2f3hdoUOmdcPizoEJoga6p8Fi0z18SocXTLC7dOl5P \
-# fDaRa3udIfeyd6KqLCOZ89ZpEZ15xiLGk5FFywrMhlPOCLdIpoW7
-# b'\x82\xa4user\xb3someone@example.com\xa5scope\x93\xa4read\xa5write\xa6delete'
-# {'user': 'someone@example.com', 'scope': ['read', 'write', 'delete']}
+# 3iJOQqw5CWjCRRDnsd7Jh4dfsyf7a4qbuEO0uT8MBEvnMVaR8rOW4dFKBVFKKgxZkVlNchGJSIgPdHtHIM4rF4mZYsriTE37
+# b'\x81\xa5scope\x93\xa4read\xa5write\xa6delete'
+# {'scope': ['read', 'write', 'delete']}
 ```
 
 ## License
