@@ -5,8 +5,8 @@ Authenticated and encrypted API tokens using modern crypto.
 
 [![Latest Version](https://img.shields.io/pypi/v/pybranca.svg?style=flat-square)](https://pypi.org/project/pybranca/)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/tuupola/branca-python/master.svg?style=flat-square)](https://travis-ci.org/tuupola/branca-python)
-[![Coverage](https://img.shields.io/codecov/c/github/tuupola/branca-python.svg?style=flat-square)](https://codecov.io/github/tuupola/branca-python)
+[![Build Status](https://img.shields.io/travis/tuupola/pybranca/master.svg?style=flat-square)](https://travis-ci.org/tuupola/pybranca)
+[![Coverage](https://img.shields.io/codecov/c/github/tuupola/pybranca.svg?style=flat-square)](https://codecov.io/github/tuupola/pybranca)
 
 ## What?
 
