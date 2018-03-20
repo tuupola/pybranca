@@ -89,7 +89,4 @@ class Branca:
             if future < timestamp:
                 raise RuntimeError("Token is expired")
 
-
-        payload = crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, header, nonce, self._key)
-
-        return payload.decode()
+        return crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, header, nonce, self._key)

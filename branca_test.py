@@ -35,7 +35,7 @@ def test_vector1():
 def test_vector2():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
-    token = branca.encode("Hello world!", timestamp=123206400)
+    token = branca.encode(b"Hello world!", timestamp=123206400)
 
     with pytest.raises(RuntimeError):
         branca.decode(token, 3600)
@@ -45,7 +45,7 @@ def test_encode_and_decode():
     token = branca.encode("Hello world!")
     decoded = branca.decode(token)
 
-    assert decoded == "Hello world!"
+    assert decoded == b"Hello world!"
 
 def test_encode_with_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
