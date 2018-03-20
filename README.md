@@ -8,6 +8,12 @@ Authenticated and encrypted API tokens using modern crypto.
 [![Build Status](https://img.shields.io/travis/tuupola/branca-python/master.svg?style=flat-square)](https://travis-ci.org/tuupola/branca-python)
 [![Coverage](https://img.shields.io/codecov/c/github/tuupola/branca-python.svg?style=flat-square)](https://codecov.io/github/tuupola/branca-python)
 
+## What?
+
+[Branca](https://branca.io/) is a secure easy to use token format which makes it hard to shoot yourself in the foot. It uses IETF XChaCha20-Poly1305 AEAD symmetric encryption to create encrypted and tamperproof tokens. Payload itself is an arbitrary sequence of bytes. You can use for example a JSON object, plain text string or even binary data serialized by [MessagePack](http://msgpack.org/) or [Protocol Buffers](https://developers.google.com/protocol-buffers/).
+
+Although not a design goal, it is possible to use [Branca as an alternative to JWT](https://appelsiini.net/2017/branca-alternative-to-jwt/).
+
 ## Install
 
 Install the library using pip. Note that you also must have [libsodium](https://download.libsodium.org/doc/) installed.
