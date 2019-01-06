@@ -32,6 +32,13 @@ def test_vector1():
 
     assert token == "875GH233T7IYrxtgXxlQBYiFobZMQdHAT51vChKsAIYCFxZtL1evV54vYqLyZtQ0ekPHt8kJHQp0a"
 
+def test_create_token_with_zero_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
+    token = branca.encode("Hello world!", timestamp=0)
+
+    assert token == "870S4BYX9BNSPU3Zy4DPI4MLAK67vYRwLkocJV3DlQdwxBA0ex3fwVt5lTY3viltGFdyMA1E6E3Co"
+
 def test_vector2():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
