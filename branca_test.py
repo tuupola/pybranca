@@ -39,6 +39,14 @@ def test_create_token_with_zero_timestamp():
 
     assert token == "870S4BYX9BNSPU3Zy4DPI4MLAK67vYRwLkocJV3DlQdwxBA0ex3fwVt5lTY3viltGFdyMA1E6E3Co"
 
+def test_should_throw_with_wrong_version():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
+    token = "89mvl3RZe7RwH2x4azVg5V2B7X2NtG4V2YLxHAB3oFc6gyeICmCKAOCQ7Y0n08klY33eQWACd7cSZ"
+
+    with pytest.raises(RuntimeError):
+        branca.decode(token)
+
 def test_should_throw_when_expired():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
