@@ -86,3 +86,9 @@ def test_should_throw_with_invalid_token():
 
     with pytest.raises(RuntimeError):
         decoded = branca.decode("XX" + token + "XX")
+
+def test_should_get_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "1jJDJOEeG2FutA8g7NAOHK4Mh5RIE8jtbXd63uYbrFDSR06dtQl9o2gZYhBa36nZHXVfiGFz"
+
+    assert branca.timestamp(token) == 123206400
