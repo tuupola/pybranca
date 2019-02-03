@@ -14,7 +14,7 @@ before_install:
   - sudo ./.travis-libsodium.sh
 install:
   - pip install -r requirements.txt
-  - pip install pytest pytest-cov
+  - pip install 'pytest-cov>=2.4.0,<2.6'
   - pip install codecov
 script:
   - pytest --cov=./
