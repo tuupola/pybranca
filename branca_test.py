@@ -25,6 +25,60 @@ import pytest
 import struct
 import xchacha20poly1305
 
+# These are the tests each implementation should have.
+
+def test_should_have_hello_world_with_zero_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "870S4BYjk7NvyViEjUNsTEmGXbARAX9PamXZg0b3JyeIdGyZkFJhNsOQW6m0K9KnXt3ZUBqDB6hF4"
+
+    assert branca.decode(token) == b"Hello world!"
+    assert branca.timestamp(token) == 0
+
+def test_should_have_hello_world_with_max_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "89i7YCwtsSiYfXvOKlgkCyElnGCOEYG7zLCjUp4MuDIZGbkKJgt79Sts9RdW2Yo4imonXsILmqtNb"
+
+    assert branca.decode(token) == b"Hello world!"
+    assert branca.timestamp(token) == 4294967295
+
+def test_should_have_hello_world_with_nov27_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "875GH234UdXU6PkYq8g7tIM80XapDQOH72bU48YJ7SK1iHiLkrqT8Mly7P59TebOxCyQeqpMJ0a7a"
+
+    assert branca.decode(token) == b"Hello world!"
+    assert branca.timestamp(token) == 123206400
+
+def test_should_have_eight_nul_bytes_with_zero_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "1jIBheHWEwYIP59Wpm4QkjkIKuhc12NcYdp9Y60B6av7sZc3vJ5wBwmKJyQzGfJCrvuBgGnf"
+
+    assert branca.decode(token) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
+    assert branca.timestamp(token) == 0
+
+def test_should_have_eight_nul_bytes_with_max_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "1jrx6DUq9HmXvYdmhWMhXzx3klRzhlAjsc3tUFxDPCvZZLm16GYOzsBG4KwF1djjW1yTeZ2B"
+
+    assert branca.decode(token) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
+    assert branca.timestamp(token) == 4294967295
+
+def test_should_have_eight_nul_bytes_with_nov27_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "1jJDJOEfuc4uBJh5ivaadjo6UaBZJDZ1NsWixVCz2mXw3824JRDQZIgflRqCNKz6yC7a0JKC"
+
+    assert branca.decode(token) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
+    assert branca.timestamp(token) == 123206400
+
+def test_should_throw_with_wrong_version():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = "89mvl3RkwXjpEj5WMxK7GUDEHEeeeZtwjMIOogTthvr44qBfYtQSIZH5MHOTC0GzoutDIeoPVZk3w"
+
+    # Aboje token has version 0xBB.
+    with pytest.raises(RuntimeError):
+        branca.decode(token)
+
+# These are the PythonHP implementation specific tests.
+
 def test_create_token_with_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
