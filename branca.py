@@ -94,3 +94,9 @@ class Branca:
                 raise RuntimeError("Token is expired")
 
         return crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, header, nonce, self._key)
+
+    def timestamp(self, token):
+        token = base62.decodebytes(token)
+        version, time = struct.unpack(">BL", bytes(token[0:5]))
+
+        return time
