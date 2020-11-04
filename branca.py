@@ -87,13 +87,15 @@ class Branca:
         if version is not self.VERSION:
             raise RuntimeError("Invalid token version")
 
+        payload = crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, header, nonce, self._key)
+
         if ttl is not None:
             future = time + ttl
             timestamp = calendar.timegm(datetime.utcnow().timetuple())
             if future < timestamp:
                 raise RuntimeError("Token is expired")
 
-        return crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, header, nonce, self._key)
+        return payload
 
     def timestamp(self, token):
         token = base62.decodebytes(token)
