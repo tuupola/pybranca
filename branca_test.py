@@ -73,9 +73,14 @@ def test_should_throw_with_wrong_version():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "89mvl3RkwXjpEj5WMxK7GUDEHEeeeZtwjMIOogTthvr44qBfYtQSIZH5MHOTC0GzoutDIeoPVZk3w"
 
-    # Aboje token has version 0xBB.
+    # Above token has version 0xBB.
     with pytest.raises(RuntimeError):
         branca.decode(token)
+
+def test_should_handle_empty_payload():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    token = branca.encode(b"")
+    assert branca.decode(token) == b""
 
 # These are the PythonHP implementation specific tests.
 
