@@ -1,7 +1,7 @@
 # Wrapper for libsodium IETF XChaCha20-Poly1305 AEAD
 #
 # Copyright (c) 2013-2018, Marsiske Stefan.
-# Copyright (c) 2018-2019 Mika Tuupola.
+# Copyright (c) 2018-2020 Mika Tuupola.
 #
 # All rights reserved.
 #
