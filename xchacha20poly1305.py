@@ -35,8 +35,16 @@ Wrapper for libsodium IETF XChaCha20-Poly1305 AEAD functions.
 
 import ctypes
 import ctypes.util
+from glob import glob
 
 library_path = ctypes.util.find_library("sodium") or ctypes.util.find_library("libsodium")
+# Workaround for bpo-21622: https://github.com/python/cpython/pull/18380
+if not library_path and glob("/lib/ld-musl-*.so*"):
+    library_path = glob("/usr/lib/libsodium.so*")[0]
+
+if not library_path:
+    raise RuntimeError("Unable to locate libsodium")
+
 sodium = ctypes.cdll.LoadLibrary(library_path)
 
 if not sodium._name:
