@@ -144,29 +144,66 @@ def test_should_throw_with_invalid_key():
         branca = Branca(key="tooshortkey")
 
 
-# These are the PythonHP implementation specific tests.
 
-def test_create_token_with_timestamp():
+
+def test_create_hello_world_with_zero_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
-    token = branca.encode("Hello world!", timestamp=123206400)
-
-    assert token == "875GH233T7IYrxtgXxlQBYiFobZMQdHAT51vChKsAIYCFxZtL1evV54vYqLyZtQ0ekPHt8kJHQp0a"
-
-def test_create_token_with_zero_timestamp():
-    branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode("Hello world!", timestamp=0)
 
-    assert token == "870S4BYX9BNSPU3Zy4DPI4MLAK67vYRwLkocJV3DlQdwxBA0ex3fwVt5lTY3viltGFdyMA1E6E3Co"
+    assert token == "870S4BYxgHw0KnP3W9fgVUHEhT5g86vJ17etaC5Kh5uIraWHCI1psNQGv298ZmjPwoYbjDQ9chy2z"
 
-def test_should_throw_with_wrong_version():
+def test_create_hello_world_with_max_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    branca._nonce = unhexlify("0102030405060708090a0b0c0102030405060708090a0b0c")
-    token = "89mvl3RZe7RwH2x4azVg5V2B7X2NtG4V2YLxHAB3oFc6gyeICmCKAOCQ7Y0n08klY33eQWACd7cSZ"
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode("Hello world!", timestamp=4294967295)
 
-    with pytest.raises(RuntimeError):
-        branca.decode(token)
+    assert token == "89i7YCwu5tWAJNHUDdmIqhzOi5hVHOd4afjZcGMcVmM4enl4yeLiDyYv41eMkNmTX6IwYEFErCSqr"
+
+def test_create_hello_world_with_november_27_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode("Hello world!", timestamp=123206400)
+
+    assert token == "875GH23U0Dr6nHFA63DhOyd9LkYudBkX8RsCTOMz5xoYAMw9sMd5QwcEqLDRnTDHPenOX7nP2trlT"
+
+def test_create_eight_nul_bytes_with_zero_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode(b"\x00\x00\x00\x00\x00\x00\x00\x00", timestamp=0)
+
+    assert token == "1jIBheHbDdkCDFQmtgw4RUZeQoOJgGwTFJSpwOAk3XYpJJr52DEpILLmmwYl4tjdSbbNqcF1"
+
+def test_create_eight_nul_bytes_with_zero_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode(b"\x00\x00\x00\x00\x00\x00\x00\x00", timestamp=4294967295)
+
+    assert token == "1jrx6DUu5q06oxykef2e2ZMyTcDRTQot9ZnwgifUtzAphGtjsxfbxXNhQyBEOGtpbkBgvIQx"
+
+def test_create_eight_nul_bytes_with_november_27_timestamp():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode(b"\x00\x00\x00\x00\x00\x00\x00\x00", timestamp=123206400)
+
+    assert token == "1jJDJOEjuwVb9Csz1Ypw1KBWSkr0YDpeBeJN6NzJWx1VgPLmcBhu2SbkpQ9JjZ3nfUf7Aytp"
+
+def test_create_empty_payload():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode(b"", timestamp=0)
+
+    assert token == "4sfD0vPFhIif8cy4nB3BQkHeJqkOkDvinI4zIhMjYX4YXZU5WIq9ycCVjGzB5"
+
+def test_create_non_utf8_payload():
+    branca = Branca(key="supersecretkeyyoushouldnotcommit")
+    branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
+    token = branca.encode(b"", timestamp=0)
+
+    assert token == "4sfD0vPFhIif8cy4nB3BQkHeJqkOkDvinI4zIhMjYX4YXZU5WIq9ycCVjGzB5"
+
+
+
 
 def test_should_throw_when_expired():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
@@ -175,38 +212,6 @@ def test_should_throw_when_expired():
 
     with pytest.raises(RuntimeError):
         branca.decode(token, 3600)
-
-def test_encode_and_decode():
-    branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    token = branca.encode("Hello world!")
-    decoded = branca.decode(token)
-
-    assert decoded == b"Hello world!"
-
-def test_encode_with_timestamp():
-    branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    token = branca.encode("Hello world!", timestamp=123206400)
-    binary = base62.decodebytes(token)
-    version, timestamp = struct.unpack(">BL", bytes(binary[0:5]))
-
-    assert version == 0xba
-    assert timestamp == 123206400
-
-def test_encode_with_zero_timestamp():
-    branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    token = branca.encode("Hello world!", timestamp=0)
-    binary = base62.decodebytes(token)
-    version, timestamp = struct.unpack(">BL", bytes(binary[0:5]))
-
-    assert version == 0xba
-    assert timestamp == 0
-
-def test_should_throw_with_invalid_token():
-    branca = Branca(key="supersecretkeyyoushouldnotcommit")
-    token = branca.encode("Hello world!")
-
-    with pytest.raises(RuntimeError):
-        decoded = branca.decode("XX" + token + "XX")
 
 def test_should_get_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
