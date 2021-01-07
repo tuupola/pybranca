@@ -25,58 +25,60 @@ import pytest
 import struct
 import xchacha20poly1305
 
-# These are the tests each implementation should have.
+#
+# Decoding vectors
+#
 
-def test_should_have_hello_world_with_zero_timestamp():
+def test_decode_hello_world_with_zero_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "870S4BYxgHw0KnP3W9fgVUHEhT5g86vJ17etaC5Kh5uIraWHCI1psNQGv298ZmjPwoYbjDQ9chy2z"
 
     assert branca.decode(token) == b"Hello world!"
     assert branca.timestamp(token) == 0
 
-def test_should_have_hello_world_with_max_timestamp():
+def test_decode_hello_world_with_max_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "89i7YCwu5tWAJNHUDdmIqhzOi5hVHOd4afjZcGMcVmM4enl4yeLiDyYv41eMkNmTX6IwYEFErCSqr"
 
     assert branca.decode(token) == b"Hello world!"
     assert branca.timestamp(token) == 4294967295
 
-def test_should_have_hello_world_with_nov27_timestamp():
+def test_decode_hello_world_with_nov27_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "875GH23U0Dr6nHFA63DhOyd9LkYudBkX8RsCTOMz5xoYAMw9sMd5QwcEqLDRnTDHPenOX7nP2trlT"
 
     assert branca.decode(token) == b"Hello world!"
     assert branca.timestamp(token) == 123206400
 
-def test_should_have_eight_nul_bytes_with_zero_timestamp():
+def test_decode_eight_nul_bytes_with_zero_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "1jIBheHbDdkCDFQmtgw4RUZeQoOJgGwTFJSpwOAk3XYpJJr52DEpILLmmwYl4tjdSbbNqcF1"
 
     assert branca.decode(token) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
     assert branca.timestamp(token) == 0
 
-def test_should_have_eight_nul_bytes_with_max_timestamp():
+def test_decode_eight_nul_bytes_with_max_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "1jrx6DUu5q06oxykef2e2ZMyTcDRTQot9ZnwgifUtzAphGtjsxfbxXNhQyBEOGtpbkBgvIQx"
 
     assert branca.decode(token) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
     assert branca.timestamp(token) == 4294967295
 
-def test_should_have_eight_nul_bytes_with_nov27_timestamp():
+def test_decode_eight_nul_bytes_with_nov27_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "1jJDJOEjuwVb9Csz1Ypw1KBWSkr0YDpeBeJN6NzJWx1VgPLmcBhu2SbkpQ9JjZ3nfUf7Aytp"
 
     assert branca.decode(token) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
     assert branca.timestamp(token) == 123206400
 
-def test_should_have_empty_payload():
+def test_decode_empty_payload():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "4sfD0vPFhIif8cy4nB3BQkHeJqkOkDvinI4zIhMjYX4YXZU5WIq9ycCVjGzB5"
 
     assert branca.decode(token) == b""
     assert branca.timestamp(token) == 0
 
-def test_should_have_non_utf8_payload():
+def test_decode_non_utf8_payload():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     token = "K9u6d0zjXp8RXNUGDyXAsB9AtPo60CD3xxQ2ulL8aQoTzXbvockRff0y1eXoHm"
 
@@ -143,67 +145,69 @@ def test_should_throw_with_invalid_key():
     with pytest.raises(ValueError):
         branca = Branca(key="tooshortkey")
 
+#
+# Encoding vectors
+#
 
-
-
-def test_create_hello_world_with_zero_timestamp():
+def test_encode_hello_world_with_zero_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode("Hello world!", timestamp=0)
 
     assert token == "870S4BYxgHw0KnP3W9fgVUHEhT5g86vJ17etaC5Kh5uIraWHCI1psNQGv298ZmjPwoYbjDQ9chy2z"
 
-def test_create_hello_world_with_max_timestamp():
+def test_encode_hello_world_with_max_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode("Hello world!", timestamp=4294967295)
 
     assert token == "89i7YCwu5tWAJNHUDdmIqhzOi5hVHOd4afjZcGMcVmM4enl4yeLiDyYv41eMkNmTX6IwYEFErCSqr"
 
-def test_create_hello_world_with_november_27_timestamp():
+def test_encode_hello_world_with_november_27_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode("Hello world!", timestamp=123206400)
 
     assert token == "875GH23U0Dr6nHFA63DhOyd9LkYudBkX8RsCTOMz5xoYAMw9sMd5QwcEqLDRnTDHPenOX7nP2trlT"
 
-def test_create_eight_nul_bytes_with_zero_timestamp():
+def test_encode_eight_nul_bytes_with_zero_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode(b"\x00\x00\x00\x00\x00\x00\x00\x00", timestamp=0)
 
     assert token == "1jIBheHbDdkCDFQmtgw4RUZeQoOJgGwTFJSpwOAk3XYpJJr52DEpILLmmwYl4tjdSbbNqcF1"
 
-def test_create_eight_nul_bytes_with_zero_timestamp():
+def test_encode_eight_nul_bytes_with_zero_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode(b"\x00\x00\x00\x00\x00\x00\x00\x00", timestamp=4294967295)
 
     assert token == "1jrx6DUu5q06oxykef2e2ZMyTcDRTQot9ZnwgifUtzAphGtjsxfbxXNhQyBEOGtpbkBgvIQx"
 
-def test_create_eight_nul_bytes_with_november_27_timestamp():
+def test_encode_eight_nul_bytes_with_november_27_timestamp():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode(b"\x00\x00\x00\x00\x00\x00\x00\x00", timestamp=123206400)
 
     assert token == "1jJDJOEjuwVb9Csz1Ypw1KBWSkr0YDpeBeJN6NzJWx1VgPLmcBhu2SbkpQ9JjZ3nfUf7Aytp"
 
-def test_create_empty_payload():
+def test_encode_empty_payload():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode(b"", timestamp=0)
 
     assert token == "4sfD0vPFhIif8cy4nB3BQkHeJqkOkDvinI4zIhMjYX4YXZU5WIq9ycCVjGzB5"
 
-def test_create_non_utf8_payload():
+def test_encode_non_utf8_payload():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
     branca._nonce = unhexlify("beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef")
     token = branca.encode(b"", timestamp=0)
 
     assert token == "4sfD0vPFhIif8cy4nB3BQkHeJqkOkDvinI4zIhMjYX4YXZU5WIq9ycCVjGzB5"
 
-
-
+#
+# Implementation specific tests
+#
 
 def test_should_throw_when_expired():
     branca = Branca(key="supersecretkeyyoushouldnotcommit")
