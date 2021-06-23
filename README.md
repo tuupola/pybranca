@@ -28,9 +28,11 @@ $ pip install pybranca
 The payload of the token can be anything, like a simple string.
 
 ```python
+import secrets
 from branca import Branca
 
-branca = Branca(key="supersecretkeyyoushouldnotcommit")
+key = secrets.token_bytes(32)
+branca = Branca(key)
 
 token = branca.encode("Hello world!")
 payload = branca.decode(token)
@@ -46,9 +48,11 @@ For more complicated data structures JSON is an usual choice.
 
 ```python
 import json
+import secrets
 from branca import Branca
 
-branca = Branca(key="supersecretkeyyoushouldnotcommit")
+key = secrets.token_bytes(32)
+branca = Branca(key)
 
 string = json.dumps({"scope" : ["read", "write", "delete"]})
 
@@ -70,7 +74,8 @@ By using [MessagePack](https://msgpack.org/) you can have more compact tokens.
 import msgpack
 from branca import Branca
 
-branca = Branca(key="supersecretkeyyoushouldnotcommit")
+key = secrets.token_bytes(32)
+branca = Branca(key)
 
 packed = msgpack.dumps({"scope" : ["read", "write", "delete"]})
 
