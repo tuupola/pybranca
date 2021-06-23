@@ -3,3 +3,6 @@
 __pycache__/
 pybranca.egg-info/
 dist/
+bin/
+lib/
+pyvenv.cfg
