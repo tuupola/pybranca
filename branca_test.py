@@ -23,6 +23,7 @@ from binascii import unhexlify, hexlify
 import base62
 import pytest
 import struct
+import sys
 import xchacha20poly1305
 
 #
@@ -307,6 +308,7 @@ def test_should_allow_bytes_key():
     assert branca.decode(token) == b"Hello world!"
     assert branca.timestamp(token) == 123206400
 
+@pytest.mark.skipif(sys.version_info < (3, 5), reason="Requires Python 3.5 or higher.")
 def test_should_allow_hex_string_key():
     branca = Branca(key="73757065727365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
 
