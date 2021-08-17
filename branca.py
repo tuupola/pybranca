@@ -40,8 +40,7 @@ class Branca:
     VERSION = 0xBA
 
     def __init__(self, key):
-        # Python 2.7 friendly way of checking if key is bytes
-        if hasattr(key, "decode"):
+        if isinstance(key, bytes):
             self._key = key
         else:
             self._key = unhexlify(key)
