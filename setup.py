@@ -11,7 +11,7 @@ with open(path.join(cwd, "README.md"), encoding="utf-8") as f:
 setup(
     name="pybranca",
     py_modules=["branca", "xchacha20poly1305"],
-    version="0.4.0",
+    version="0.5.0",
     description="Authenticated and encrypted API tokens using modern crypto",
     long_description=long_description,
     long_description_content_type="text/markdown",

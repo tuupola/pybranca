@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.5.0-dev](https://github.com/tuupola/pybranca/compare/0.4.0...master) - unreleased
+## [0.5.0](https://github.com/tuupola/pybranca/compare/0.4.0...master) - 2021-08-17
 
 ### Changed
 - Assume string keys are hex encoded ([#11](https://github.com/tuupola/pybranca/pull/11)).
