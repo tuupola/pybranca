@@ -308,8 +308,7 @@ def test_should_allow_bytes_key():
     assert branca.timestamp(token) == 123206400
 
 def test_should_allow_hex_string_key():
-    key = unhexlify("73757065727365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
-    branca = Branca(key)
+    branca = Branca(key="73757065727365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
 
     token = "875GH23U0Dr6nHFA63DhOyd9LkYudBkX8RsCTOMz5xoYAMw9sMd5QwcEqLDRnTDHPenOX7nP2trlT"
 
