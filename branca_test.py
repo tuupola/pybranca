@@ -179,7 +179,8 @@ def test_should_throw_with_modified_tag():
 
 # Test vector 23
 def test_should_throw_with_wrong_key():
-    branca = Branca(key="77726f6e677365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
+    key = unhexlify("77726f6e677365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
+    branca = Branca(key)
     token = "870S4BYxgHw0KnP3W9fgVUHEhT5g86vJ17etaC5Kh5uIraWHCI1psNQGv298ZmjPwoYbjDQ9chy2z"
 
     with pytest.raises(RuntimeError):
@@ -188,7 +189,8 @@ def test_should_throw_with_wrong_key():
 # Test vector 24
 def test_should_throw_with_invalid_key():
     with pytest.raises(ValueError):
-        branca = Branca(key="746f6f73686f72746b6579")
+        key = unhexlify("746f6f73686f72746b6579")
+        branca = Branca(key)
 
 #
 # Encoding vectors
