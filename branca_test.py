@@ -23,6 +23,7 @@ from binascii import unhexlify, hexlify
 import base62
 import pytest
 import struct
+import sys
 import xchacha20poly1305
 
 #
@@ -180,7 +181,6 @@ def test_should_throw_with_modified_tag():
 # Test vector 23
 def test_should_throw_with_wrong_key():
     key = unhexlify("77726f6e677365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
-
     branca = Branca(key)
     token = "870S4BYxgHw0KnP3W9fgVUHEhT5g86vJ17etaC5Kh5uIraWHCI1psNQGv298ZmjPwoYbjDQ9chy2z"
 
@@ -189,9 +189,8 @@ def test_should_throw_with_wrong_key():
 
 # Test vector 24
 def test_should_throw_with_invalid_key():
-    key = unhexlify("746f6f73686f72746b6579")
-
     with pytest.raises(ValueError):
+        key = unhexlify("746f6f73686f72746b6579")
         branca = Branca(key)
 
 #
@@ -298,4 +297,22 @@ def test_should_get_timestamp():
 
     token = "1jJDJOEeG2FutA8g7NAOHK4Mh5RIE8jtbXd63uYbrFDSR06dtQl9o2gZYhBa36nZHXVfiGFz"
 
+    assert branca.timestamp(token) == 123206400
+
+def test_should_allow_bytes_key():
+    key = unhexlify("73757065727365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
+    branca = Branca(key)
+
+    token = "875GH23U0Dr6nHFA63DhOyd9LkYudBkX8RsCTOMz5xoYAMw9sMd5QwcEqLDRnTDHPenOX7nP2trlT"
+
+    assert branca.decode(token) == b"Hello world!"
+    assert branca.timestamp(token) == 123206400
+
+@pytest.mark.skipif(sys.version_info < (3, 5), reason="Requires Python 3.5 or higher.")
+def test_should_allow_hex_string_key():
+    branca = Branca(key="73757065727365637265746b6579796f7573686f756c646e6f74636f6d6d6974")
+
+    token = "875GH23U0Dr6nHFA63DhOyd9LkYudBkX8RsCTOMz5xoYAMw9sMd5QwcEqLDRnTDHPenOX7nP2trlT"
+
+    assert branca.decode(token) == b"Hello world!"
     assert branca.timestamp(token) == 123206400

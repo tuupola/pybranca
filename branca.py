@@ -27,8 +27,8 @@ Authenticated and encrypted API tokens using modern crypto.
 import base62
 import calendar
 import ctypes
-import binascii
 import struct
+from binascii import unhexlify
 from datetime import datetime
 from xchacha20poly1305 import generate_nonce
 from xchacha20poly1305 import crypto_aead_xchacha20poly1305_ietf_encrypt
@@ -43,9 +43,9 @@ class Branca:
         if isinstance(key, bytes):
             self._key = key
         else:
-            self._key = key.encode()
+            self._key = unhexlify(key)
 
-        if len(key) is not CRYPTO_AEAD_XHCACHA20POLY1305_IETF_KEYBYTES:
+        if len(self._key) is not CRYPTO_AEAD_XHCACHA20POLY1305_IETF_KEYBYTES:
             raise ValueError(
                 "Secrect key should be {} bytes long".format(
                     CRYPTO_AEAD_XHCACHA20POLY1305_IETF_KEYBYTES
