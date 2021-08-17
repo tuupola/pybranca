@@ -4,7 +4,7 @@ Authenticated and encrypted API tokens using modern crypto.
 
 
 [![Latest Version](https://img.shields.io/pypi/v/pybranca.svg?style=flat-square)](https://pypi.org/project/pybranca/)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/tuupola/pybranca/Tests/master?style=flat-square)](https://github.com/tuupola/pybranca/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/tuupola/pybranca.svg?style=flat-square)](https://codecov.io/github/tuupola/pybranca)
 
@@ -93,4 +93,4 @@ print(msgpack.loads(payload, raw=False))
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.txt) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
